@@ -86,7 +86,7 @@
     "/$schemagroups/{group-name}": {
       "parameters": [
         {
-          "$ref": "/components/parameters/groupNameParam"
+          "$ref": "#/components/parameters/groupNameParam"
         }
       ],
       "put": {
@@ -190,10 +190,10 @@
     "/$schemagroups/{group-name}/schemas/{schema-name}": {
       "parameters": [
         {
-          "$ref": "/components/parameters/groupNameParam"
+          "$ref": "#/components/parameters/groupNameParam"
         },
         {
-          "$ref": "/components/parameters/schemaNameParam"
+          "$ref": "#/components/parameters/schemaNameParam"
         }
       ],
       "post": {
@@ -234,47 +234,7 @@
         "operationId": "getLatestSchema",
         "responses": {
           "200": {
-            "description": "OK",
-            "headers": {
-              "Location": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "X-Serialization": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "schema type"
-              },
-              "X-Schema-Id": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "description": "unique schema identifier"
-              },
-              "X-Schema-Id-Location": {
-                "schema": {
-                  "type": "string",
-                  "format": "url"
-                },
-                "description": "location of schema resource"
-              },
-              "X-Schema-Version": {
-                "schema": {
-                  "type": "integer"
-                },
-                "description": "version of returned schema"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SchemaBytePayload"
-                }
-              }
-            }
+            "$ref": "#/components/responses/SchemaBytePayloadResponse"
           }
         },
         "tags": [
@@ -300,10 +260,10 @@
     "/$schemagroups/{group-name}/schemas/{schema-name}/versions": {
       "parameters": [
         {
-          "$ref": "/components/parameters/groupNameParam"
+          "$ref": "#/components/parameters/groupNameParam"
         },
         {
-          "$ref": "/components/parameters/schemaNameParam"
+          "$ref": "#/components/parameters/schemaNameParam"
         }
       ],
       "get": {
@@ -341,10 +301,10 @@
     "/$schemagroups/{group-name}/schemas/{schema-name}/versions/{version-number}": {
       "parameters": [
         {
-          "$ref": "/components/parameters/groupNameParam"
+          "$ref": "#/components/parameters/groupNameParam"
         },
         {
-          "$ref": "/components/parameters/schemaNameParam"
+          "$ref": "#/components/parameters/schemaNameParam"
         },
         {
           "name": "version-number",

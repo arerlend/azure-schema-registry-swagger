@@ -5,11 +5,11 @@ info:
 paths:
   /$schemagroups:
     get:
-      summary: "Get list of schema groups"
-      description: "Get all schema groups in namespace."
+      summary: 'Get list of schema groups'
+      description: 'Get all schema groups in namespace.'
       operationId: getGroups
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -18,14 +18,14 @@ paths:
                 items: 
                   type: string
       tags:
-      -  "groups"
+      -  'groups'
   /$schemagroups/getSchemaById:
     get:
-      summary: "Get schema by GUID"
-      description: "Get schema by GUID.  Azure Schema Registry guarantees that GUID within a namespace."
+      summary: 'Get schema by GUID'
+      description: 'Get schema by GUID.  Azure Schema Registry guarantees that GUID within a namespace.'
       operationId: getSchemaById
       responses:
-        "200":
+        '200':
           description: OK
           headers: 
             X-Serialization:
@@ -50,39 +50,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SchemaBytePayload'
-        "404":
+        '404':
           description: Schema with matching GUID not found
       tags:
-        - "schemas"
+        - 'schemas'
   /$schemagroups/{group-name}:
     parameters:
-      - $ref: "/components/parameters/groupNameParam"
+      - $ref: '#/components/parameters/groupNameParam'
     put:
       summary: Create schema group
       description: Create schema group in schema registry namespace.
       operationId: createGroup
       responses:
-        "201":
+        '201':
           description: Created
           headers:
             Location:
               schema:
                 type: string
-        "409":
+        '409':
           description: Schema group already exists
       tags:
-      -  "groups"
+      -  'groups'
     delete:
-      summary: "Delete schema group"
-      description: "Delete schema group in schema registry namespace."
+      summary: 'Delete schema group'
+      description: 'Delete schema group in schema registry namespace.'
       operationId: deleteGroup
       responses:
-        "204":
+        '204':
           description: OK no content
-        "404":
-          description: "Specified group not found"
+        '404':
+          description: 'Specified group not found'
       tags:
-      -  "groups"
+      -  'groups'
   /$schemagroups/{group-name}/schemas:
     parameters:
     - name: group-name
@@ -93,12 +93,12 @@ paths:
         type: string
     get:
       tags:
-      - "groups"
-      summary: "Get schemas for group name"
-      description: "Returns schema by group name."
+      - 'groups'
+      summary: 'Get schemas for group name'
+      description: 'Returns schema by group name.'
       operationId: getSchemasByGroup
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -106,36 +106,36 @@ paths:
                 type: array
                 items: 
                   type: string
-        "404":
-          description: "Group not found"
+        '404':
+          description: 'Group not found'
     delete:
       tags:
-      - "groups"
-      summary: "Deletes all schemas in group"
-      description: "Deletes all schemas under specified group name."
+      - 'groups'
+      summary: 'Deletes all schemas in group'
+      description: 'Deletes all schemas under specified group name.'
       operationId: deleteSchemasByGroup
       responses:
-        "204":
+        '204':
           description: OK no content
-        "400":
+        '400':
           description: Invalid group supplied
-        "404":
+        '404':
           description: Group not found
   /$schemagroups/{group-name}/schemas/{schema-name}:
     parameters:
-      - $ref: "#/components/parameters/groupNameParam"
-      - $ref: "#/components/parameters/schemaNameParam"
+      - $ref: '#/components/parameters/groupNameParam'
+      - $ref: '#/components/parameters/schemaNameParam'
     post:
       summary: Get schema GUID by schema content
       description: Get GUID for schema with matching byte content and serialization format.
       operationId: getGuidBySchemaContent
       responses:
-        "200":
-          $ref: "#/components/responses/SchemaIdResponse"
-        "404":
+        '200':
+          $ref: '#/components/responses/SchemaIdResponse'
+        '404':
           description: Matching schema not found
       tags:
-        - "schemas"
+        - 'schemas'
     put: 
       summary: Create new schema
       description: >
@@ -144,41 +144,41 @@ paths:
         If schema of specified name exists already in specified group, schema is created at latest version + 1.
       operationId: createSchema
       responses:
-        "200":
-          $ref: "#/components/responses/SchemaIdResponse"
-        "400": 
+        '200':
+          $ref: '#/components/responses/SchemaIdResponse'
+        '400': 
           description: Invalid request
       tags:
-        - "schemas"
+        - 'schemas'
     get:
       summary: Get latest version of schema
       description: Get latest version of schema. 
       operationId: getLatestSchema
       responses: 
-        "200":
-          $ref: "#/components/responses/SchemaBytePayloadResponse"
+        '200':
+          $ref: '#/components/responses/SchemaBytePayloadResponse'
       tags:
-        - "schemas"
+        - 'schemas'
     delete:
       summary: Delete schema
       operationId: deleteSchema
       responses:
-        "204":
+        '204':
           description: OK no content
-        "404":
+        '404':
           description: Matching schema not found
       tags:
-        - "schemas"
+        - 'schemas'
   /$schemagroups/{group-name}/schemas/{schema-name}/versions:
     parameters:
-      - $ref: "#/components/parameters/groupNameParam"
-      - $ref: "#/components/parameters/schemaNameParam"
+      - $ref: '#/components/parameters/groupNameParam'
+      - $ref: '#/components/parameters/schemaNameParam'
     get:
       summary: Get list of versions
       description: Get list of versions for specified schema
       operationId: getSchemaVersions
       responses:
-        "200":
+        '200':
           description: OK
           headers: 
             X-Serialization:
@@ -192,11 +192,11 @@ paths:
                 items: 
                   type: integer
       tags:
-        - "schemas"
+        - 'schemas'
   /$schemagroups/{group-name}/schemas/{schema-name}/versions/{version-number}:
     parameters:
-      - $ref: "#/components/parameters/groupNameParam"
-      - $ref: "#/components/parameters/schemaNameParam"
+      - $ref: '#/components/parameters/groupNameParam'
+      - $ref: '#/components/parameters/schemaNameParam'
       - name: version-number
         in: path
         description: version number
@@ -207,18 +207,18 @@ paths:
       summary: Get specified version of schema
       operationId: getSchemaVersion
       responses:
-        "200":
-          $ref: "#/components/responses/SchemaBytePayloadResponse"
+        '200':
+          $ref: '#/components/responses/SchemaBytePayloadResponse'
       tags:
-        - "schemas"
+        - 'schemas'
     delete:
       summary: Delete specified version of schema
       operationId: deleteSchemaVersion
       responses:
-        "200":
+        '200':
           description: OK
       tags:
-        - "schemas"
+        - 'schemas'
 
 components: 
   schemas:
