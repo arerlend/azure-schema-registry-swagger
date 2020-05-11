@@ -1,13 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Azure Schema Registry
-  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
-  version: 0.1.9
-servers:
-  - url: http://api.example.com/v1
-    description: Optional server description, e.g. Main (production) server
-  - url: http://staging-api.example.com
-    description: Optional server description, e.g. Internal staging server for testing
+  title: Azure Schema Registry Rest Service
+  version: 1.0.0-beta
 paths:
   /$schemagroups:
     get:
@@ -55,19 +49,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/SchemaBytePayload'
         "404":
           description: Schema with matching GUID not found
       tags:
         - "schemas"
   /$schemagroups/{group-name}:
     parameters:
-      - name: group-name
-        in: path
-        description: schema group name
-        required: true
-        schema:
-          type: string
+      - $ref: "/components/parameters/groupNameParam"
     put:
       summary: Create schema group
       description: Create schema group in schema registry namespace.
@@ -134,56 +123,15 @@ paths:
           description: Group not found
   /$schemagroups/{group-name}/schemas/{schema-name}:
     parameters:
-      - name: group-name
-        in: path
-        description: schema group
-        required: true
-        schema:
-          type: string
-      - name: schema-name
-        in: path
-        description: schema name
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/groupNameParam"
+      - $ref: "#/components/parameters/schemaNameParam"
     post:
       summary: Get schema GUID by schema content
       description: Get GUID for schema with matching byte content and serialization format.
       operationId: getGuidBySchemaContent
       responses:
         "200":
-          description: OK
-          headers:
-            Location:
-              schema:
-                type: string
-            X-Serialization:
-              schema:
-                type: string
-              description: schema type
-            X-Schema-Id:
-              schema:
-                type: string
-                format: uuid
-              description: unique schema identifier
-            X-Schema-Id-Location: 
-              schema:
-                type: string
-                format: url
-              description: location of schema resource
-            X-Schema-Version:
-              schema:
-                type: integer
-              description: version of returned schema
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    description: schema GUID
+          $ref: "#/components/responses/SchemaIdResponse"
         "404":
           description: Matching schema not found
       tags:
@@ -197,39 +145,7 @@ paths:
       operationId: createSchema
       responses:
         "200":
-          description: OK
-          headers:
-            Location:
-              schema:
-                type: string
-            X-Serialization:
-              schema:
-                type: string
-              description: schema type
-            X-Schema-Id:
-              schema:
-                type: string
-                format: uuid
-              description: unique schema identifier
-            X-Schema-Id-Location: 
-              schema:
-                type: string
-                format: url
-              description: location of schema resource
-            X-Schema-Version:
-              schema:
-                type: integer
-              description: version of returned schema
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    description: schema GUID
-            
+          $ref: "#/components/responses/SchemaIdResponse"
         "400": 
           description: Invalid request
       tags:
@@ -240,38 +156,7 @@ paths:
       operationId: getLatestSchema
       responses: 
         "200":
-          description: OK
-          headers:
-            Location:
-              schema:
-                type: string
-            X-Serialization:
-              schema:
-                type: string
-              description: schema type
-            X-Schema-Id:
-              schema:
-                type: string
-                format: uuid
-              description: unique schema identifier
-            X-Schema-Id-Location: 
-              schema:
-                type: string
-                format: url
-              description: location of schema resource
-            X-Schema-Version:
-              schema:
-                type: integer
-              description: version of returned schema
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    description: schema GUID
+          $ref: "#/components/responses/SchemaBytePayloadResponse"
       tags:
         - "schemas"
     delete:
@@ -286,18 +171,8 @@ paths:
         - "schemas"
   /$schemagroups/{group-name}/schemas/{schema-name}/versions:
     parameters:
-      - name: group-name
-        in: path
-        description: schema group
-        required: true
-        schema:
-          type: string
-      - name: schema-name
-        in: path
-        description: schema name
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/groupNameParam"
+      - $ref: "#/components/parameters/schemaNameParam"
     get:
       summary: Get list of versions
       description: Get list of versions for specified schema
@@ -320,18 +195,8 @@ paths:
         - "schemas"
   /$schemagroups/{group-name}/schemas/{schema-name}/versions/{version-number}:
     parameters:
-      - name: group-name
-        in: path
-        description: schema group
-        required: true
-        schema:
-          type: string
-      - name: schema-name
-        in: path
-        description: schema name
-        required: true
-        schema:
-          type: string
+      - $ref: "#/components/parameters/groupNameParam"
+      - $ref: "#/components/parameters/schemaNameParam"
       - name: version-number
         in: path
         description: version number
@@ -343,33 +208,7 @@ paths:
       operationId: getSchemaVersion
       responses:
         "200":
-          description: OK
-          headers: 
-            Location:
-              schema:
-                type: string
-            X-Serialization:
-              schema:
-                type: string
-              description: schema type
-            X-Schema-Id:
-              schema:
-                type: string
-                format: uuid
-              description: unique schema identifier
-            X-Schema-Id-Location: 
-              schema:
-                type: string
-                format: url
-              description: location of schema resource
-            X-Schema-Version:
-              schema:
-                type: integer
-              description: version of returned schema
-          content:
-            application/json:
-              schema:
-                type: object
+          $ref: "#/components/responses/SchemaBytePayloadResponse"
       tags:
         - "schemas"
     delete:
@@ -380,3 +219,85 @@ paths:
           description: OK
       tags:
         - "schemas"
+
+components: 
+  schemas:
+    SchemaId:
+      type: object
+      properties:
+        id:
+          type: string
+    SchemaBytePayload:
+      type: string
+  parameters:
+    groupNameParam:
+      name: group-name
+      in: path
+      description: schema group
+      required: true
+      schema:
+        type: string
+    schemaNameParam:
+      name: schema-name
+      in: path
+      description: schema name
+      required: true
+      schema:
+        type: string
+  responses:
+    SchemaIdResponse:
+      description: OK
+      headers:
+        Location:
+          schema:
+            type: string
+        X-Serialization:
+          schema:
+            type: string
+          description: schema type
+        X-Schema-Id:
+          schema:
+            type: string
+            format: uuid
+          description: unique schema identifier
+        X-Schema-Id-Location: 
+          schema:
+            type: string
+            format: url
+          description: location of schema resource
+        X-Schema-Version:
+          schema:
+            type: integer
+          description: version of returned schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SchemaId'
+    SchemaBytePayloadResponse:
+      description: OK
+      headers: 
+        Location:
+          schema:
+            type: string
+        X-Serialization:
+          schema:
+            type: string
+          description: schema type
+        X-Schema-Id:
+          schema:
+            type: string
+            format: uuid
+          description: unique schema identifier
+        X-Schema-Id-Location: 
+          schema:
+            type: string
+            format: url
+          description: location of schema resource
+        X-Schema-Version:
+          schema:
+            type: integer
+          description: version of returned schema
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SchemaBytePayload'
