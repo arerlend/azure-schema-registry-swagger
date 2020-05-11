@@ -1,20 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Azure Schema Registry",
-    "description": "Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.",
-    "version": "0.1.9"
+    "title": "Azure Schema Registry Rest Service",
+    "version": "1.0.0-beta"
   },
-  "servers": [
-    {
-      "url": "http://api.example.com/v1",
-      "description": "Optional server description, e.g. Main (production) server"
-    },
-    {
-      "url": "http://staging-api.example.com",
-      "description": "Optional server description, e.g. Internal staging server for testing"
-    }
-  ],
   "paths": {
     "/$schemagroups": {
       "get": {
@@ -80,7 +69,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SchemaBytePayload"
                 }
               }
             }
@@ -97,13 +86,7 @@
     "/$schemagroups/{group-name}": {
       "parameters": [
         {
-          "name": "group-name",
-          "in": "path",
-          "description": "schema group name",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "$ref": "/components/parameters/groupNameParam"
         }
       ],
       "put": {
@@ -207,22 +190,10 @@
     "/$schemagroups/{group-name}/schemas/{schema-name}": {
       "parameters": [
         {
-          "name": "group-name",
-          "in": "path",
-          "description": "schema group",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "$ref": "/components/parameters/groupNameParam"
         },
         {
-          "name": "schema-name",
-          "in": "path",
-          "description": "schema name",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "$ref": "/components/parameters/schemaNameParam"
         }
       ],
       "post": {
@@ -231,54 +202,7 @@
         "operationId": "getGuidBySchemaContent",
         "responses": {
           "200": {
-            "description": "OK",
-            "headers": {
-              "Location": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "X-Serialization": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "schema type"
-              },
-              "X-Schema-Id": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "description": "unique schema identifier"
-              },
-              "X-Schema-Id-Location": {
-                "schema": {
-                  "type": "string",
-                  "format": "url"
-                },
-                "description": "location of schema resource"
-              },
-              "X-Schema-Version": {
-                "schema": {
-                  "type": "integer"
-                },
-                "description": "version of returned schema"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "schema GUID"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/SchemaIdResponse"
           },
           "404": {
             "description": "Matching schema not found"
@@ -294,54 +218,7 @@
         "operationId": "createSchema",
         "responses": {
           "200": {
-            "description": "OK",
-            "headers": {
-              "Location": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "X-Serialization": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "schema type"
-              },
-              "X-Schema-Id": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "description": "unique schema identifier"
-              },
-              "X-Schema-Id-Location": {
-                "schema": {
-                  "type": "string",
-                  "format": "url"
-                },
-                "description": "location of schema resource"
-              },
-              "X-Schema-Version": {
-                "schema": {
-                  "type": "integer"
-                },
-                "description": "version of returned schema"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "schema GUID"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/SchemaIdResponse"
           },
           "400": {
             "description": "Invalid request"
@@ -394,14 +271,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "schema GUID"
-                    }
-                  }
+                  "$ref": "#/components/schemas/SchemaBytePayload"
                 }
               }
             }
@@ -430,22 +300,10 @@
     "/$schemagroups/{group-name}/schemas/{schema-name}/versions": {
       "parameters": [
         {
-          "name": "group-name",
-          "in": "path",
-          "description": "schema group",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "$ref": "/components/parameters/groupNameParam"
         },
         {
-          "name": "schema-name",
-          "in": "path",
-          "description": "schema name",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "$ref": "/components/parameters/schemaNameParam"
         }
       ],
       "get": {
@@ -483,22 +341,10 @@
     "/$schemagroups/{group-name}/schemas/{schema-name}/versions/{version-number}": {
       "parameters": [
         {
-          "name": "group-name",
-          "in": "path",
-          "description": "schema group",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "$ref": "/components/parameters/groupNameParam"
         },
         {
-          "name": "schema-name",
-          "in": "path",
-          "description": "schema name",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
+          "$ref": "/components/parameters/schemaNameParam"
         },
         {
           "name": "version-number",
@@ -515,47 +361,7 @@
         "operationId": "getSchemaVersion",
         "responses": {
           "200": {
-            "description": "OK",
-            "headers": {
-              "Location": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "X-Serialization": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "schema type"
-              },
-              "X-Schema-Id": {
-                "schema": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "description": "unique schema identifier"
-              },
-              "X-Schema-Id-Location": {
-                "schema": {
-                  "type": "string",
-                  "format": "url"
-                },
-                "description": "location of schema resource"
-              },
-              "X-Schema-Version": {
-                "schema": {
-                  "type": "integer"
-                },
-                "description": "version of returned schema"
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
+            "$ref": "#/components/responses/SchemaBytePayloadResponse"
           }
         },
         "tags": [
@@ -573,6 +379,129 @@
         "tags": [
           "schemas"
         ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SchemaId": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "SchemaBytePayload": {
+        "type": "string"
+      }
+    },
+    "parameters": {
+      "groupNameParam": {
+        "name": "group-name",
+        "in": "path",
+        "description": "schema group",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "schemaNameParam": {
+        "name": "schema-name",
+        "in": "path",
+        "description": "schema name",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "SchemaIdResponse": {
+        "description": "OK",
+        "headers": {
+          "Location": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "X-Serialization": {
+            "schema": {
+              "type": "string"
+            },
+            "description": "schema type"
+          },
+          "X-Schema-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "unique schema identifier"
+          },
+          "X-Schema-Id-Location": {
+            "schema": {
+              "type": "string",
+              "format": "url"
+            },
+            "description": "location of schema resource"
+          },
+          "X-Schema-Version": {
+            "schema": {
+              "type": "integer"
+            },
+            "description": "version of returned schema"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaId"
+            }
+          }
+        }
+      },
+      "SchemaBytePayloadResponse": {
+        "description": "OK",
+        "headers": {
+          "Location": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "X-Serialization": {
+            "schema": {
+              "type": "string"
+            },
+            "description": "schema type"
+          },
+          "X-Schema-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "unique schema identifier"
+          },
+          "X-Schema-Id-Location": {
+            "schema": {
+              "type": "string",
+              "format": "url"
+            },
+            "description": "location of schema resource"
+          },
+          "X-Schema-Version": {
+            "schema": {
+              "type": "integer"
+            },
+            "description": "version of returned schema"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaBytePayload"
+            }
+          }
+        }
       }
     }
   }
