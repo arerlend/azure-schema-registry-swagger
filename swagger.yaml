@@ -56,7 +56,12 @@ paths:
         - 'schemas'
   /$schemagroups/{group-name}:
     parameters:
-      - $ref: '#/components/parameters/groupNameParam'
+      - name: group-name
+        in: path
+        description: schema group
+        required: true
+        schema:
+          type: string
     put:
       summary: Create schema group
       description: Create schema group in schema registry namespace.
@@ -123,8 +128,18 @@ paths:
           description: Group not found
   /$schemagroups/{group-name}/schemas/{schema-name}:
     parameters:
-      - $ref: '#/components/parameters/groupNameParam'
-      - $ref: '#/components/parameters/schemaNameParam'
+      - name: group-name
+        in: path
+        description: schema group
+        required: true
+        schema:
+          type: string
+      - name: schema-name
+        in: path
+        description: schema name
+        required: true
+        schema:
+          type: string
     post:
       summary: Get schema GUID by schema content
       description: Get GUID for schema with matching byte content and serialization format.
@@ -171,8 +186,18 @@ paths:
         - 'schemas'
   /$schemagroups/{group-name}/schemas/{schema-name}/versions:
     parameters:
-      - $ref: '#/components/parameters/groupNameParam'
-      - $ref: '#/components/parameters/schemaNameParam'
+      - name: group-name
+        in: path
+        description: schema group
+        required: true
+        schema:
+          type: string
+      - name: schema-name
+        in: path
+        description: schema name
+        required: true
+        schema:
+          type: string
     get:
       summary: Get list of versions
       description: Get list of versions for specified schema
@@ -195,8 +220,18 @@ paths:
         - 'schemas'
   /$schemagroups/{group-name}/schemas/{schema-name}/versions/{version-number}:
     parameters:
-      - $ref: '#/components/parameters/groupNameParam'
-      - $ref: '#/components/parameters/schemaNameParam'
+      - name: group-name
+        in: path
+        description: schema group
+        required: true
+        schema:
+          type: string
+      - name: schema-name
+        in: path
+        description: schema name
+        required: true
+        schema:
+          type: string
       - name: version-number
         in: path
         description: version number
@@ -229,21 +264,6 @@ components:
           type: string
     SchemaBytePayload:
       type: string
-  parameters:
-    groupNameParam:
-      name: group-name
-      in: path
-      description: schema group
-      required: true
-      schema:
-        type: string
-    schemaNameParam:
-      name: schema-name
-      in: path
-      description: schema name
-      required: true
-      schema:
-        type: string
   responses:
     SchemaIdResponse:
       description: OK
