@@ -86,7 +86,13 @@
     "/$schemagroups/{group-name}": {
       "parameters": [
         {
-          "$ref": "#/components/parameters/groupNameParam"
+          "name": "group-name",
+          "in": "path",
+          "description": "schema group",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "put": {
@@ -190,10 +196,22 @@
     "/$schemagroups/{group-name}/schemas/{schema-name}": {
       "parameters": [
         {
-          "$ref": "#/components/parameters/groupNameParam"
+          "name": "group-name",
+          "in": "path",
+          "description": "schema group",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
         },
         {
-          "$ref": "#/components/parameters/schemaNameParam"
+          "name": "schema-name",
+          "in": "path",
+          "description": "schema name",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "post": {
@@ -260,10 +278,22 @@
     "/$schemagroups/{group-name}/schemas/{schema-name}/versions": {
       "parameters": [
         {
-          "$ref": "#/components/parameters/groupNameParam"
+          "name": "group-name",
+          "in": "path",
+          "description": "schema group",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
         },
         {
-          "$ref": "#/components/parameters/schemaNameParam"
+          "name": "schema-name",
+          "in": "path",
+          "description": "schema name",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "get": {
@@ -301,10 +331,22 @@
     "/$schemagroups/{group-name}/schemas/{schema-name}/versions/{version-number}": {
       "parameters": [
         {
-          "$ref": "#/components/parameters/groupNameParam"
+          "name": "group-name",
+          "in": "path",
+          "description": "schema group",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
         },
         {
-          "$ref": "#/components/parameters/schemaNameParam"
+          "name": "schema-name",
+          "in": "path",
+          "description": "schema name",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "version-number",
@@ -354,26 +396,6 @@
       },
       "SchemaBytePayload": {
         "type": "string"
-      }
-    },
-    "parameters": {
-      "groupNameParam": {
-        "name": "group-name",
-        "in": "path",
-        "description": "schema group",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      },
-      "schemaNameParam": {
-        "name": "schema-name",
-        "in": "path",
-        "description": "schema name",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
       }
     },
     "responses": {
