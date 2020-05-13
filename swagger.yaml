@@ -19,41 +19,26 @@ paths:
                   type: string
       tags:
       -  'groups'
-  /$schemagroups/getSchemaById:
+  /$schemas/ids/{schema-guid}:
     get:
-      summary: 'Get schema by GUID'
-      description: 'Get schema by GUID.  Azure Schema Registry guarantees that GUID within a namespace.'
+      summary: Get schema by GUID
+      description: Get schema by GUID.
       operationId: getSchemaById
+      parameters:
+      - name: schema-guid
+        in: path
+        description: schema guid referencing specific schema in registry namespace
+        required: true
+        schema:
+          type: string
+          format: uuid
       responses:
         '200':
-          description: OK
-          headers: 
-            X-Serialization:
-              schema:
-                type: string
-              description: schema type
-            X-Schema-Id:
-              schema:
-                type: string
-                format: uuid
-              description: unique schema identifier
-            X-Schema-Id-Location: 
-              schema:
-                type: string
-                format: url
-              description: location of schema resource
-            X-Schema-Version:
-              schema:
-                type: integer
-              description: version of returned schema
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SchemaBytePayload'
+          $ref: '#/components/responses/SchemaBytePayloadResponse'
         '404':
           description: Schema with matching GUID not found
       tags:
-        - 'schemas'
+        - 'runtime'
   /$schemagroups/{group-name}:
     parameters:
       - name: group-name
@@ -62,10 +47,36 @@ paths:
         required: true
         schema:
           type: string
+    get:
+      summary: Get schema group
+      description: Get schema group description in registry namespace.
+      operationId: getGroup
+      responses:
+        '200': 
+          description: OK
+          headers:
+            X-Serialization:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchemaGroup'
+        '404':
+          description: Specified group not found
+      tags:
+      - 'groups'
     put:
       summary: Create schema group
-      description: Create schema group in schema registry namespace.
-      operationId: createGroup
+      description: Create schema group with specified serialization format in registry namespace.
+      operationId: createGroup 
+      requestBody:
+        description: schema group description
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchemaGroup'
       responses:
         '201':
           description: Created
@@ -78,14 +89,14 @@ paths:
       tags:
       -  'groups'
     delete:
-      summary: 'Delete schema group'
-      description: 'Delete schema group in schema registry namespace.'
+      summary: Delete schema group
+      description: Delete schema group in schema registry namespace.
       operationId: deleteGroup
       responses:
         '204':
           description: OK no content
         '404':
-          description: 'Specified group not found'
+          description: Specified group not found
       tags:
       -  'groups'
   /$schemagroups/{group-name}/schemas:
@@ -99,8 +110,8 @@ paths:
     get:
       tags:
       - 'groups'
-      summary: 'Get schemas for group name'
-      description: 'Returns schema by group name.'
+      summary: Get schemas for group name
+      description: Returns schema by group name.
       operationId: getSchemasByGroup
       responses:
         '200':
@@ -112,18 +123,16 @@ paths:
                 items: 
                   type: string
         '404':
-          description: 'Group not found'
+          description: Group not found
     delete:
       tags:
       - 'groups'
-      summary: 'Deletes all schemas in group'
-      description: 'Deletes all schemas under specified group name.'
+      summary: Deletes all schemas in group
+      description: Deletes all schemas under specified group name.
       operationId: deleteSchemasByGroup
       responses:
         '204':
           description: OK no content
-        '400':
-          description: Invalid group supplied
         '404':
           description: Group not found
   /$schemagroups/{group-name}/schemas/{schema-name}:
@@ -144,27 +153,54 @@ paths:
       summary: Get schema GUID by schema content
       description: Get GUID for schema with matching byte content and serialization format.
       operationId: getGuidBySchemaContent
+      parameters:
+        - in: header
+          name: X-Serialization
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: schema content
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchemaBytePayload'
       responses:
         '200':
           $ref: '#/components/responses/SchemaIdResponse'
         '404':
           description: Matching schema not found
       tags:
-        - 'schemas'
+        - 'runtime'
     put: 
-      summary: Create new schema
+      summary: Register schema
       description: >
-        Create new schema.
+        Register schema.
         If schema of specified name does not exist in specified group, schema is created at version 1.
         If schema of specified name exists already in specified group, schema is created at latest version + 1.
+        If schema with identical content already exists, existing schema's GUID is returned. 
       operationId: createSchema
+      parameters:
+        - in: header
+          name: X-Serialization
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: schema content
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchemaBytePayload'
       responses:
         '200':
           $ref: '#/components/responses/SchemaIdResponse'
         '400': 
           description: Invalid request
       tags:
-        - 'schemas'
+        - 'runtime'
     get:
       summary: Get latest version of schema
       description: Get latest version of schema. 
@@ -244,14 +280,16 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/SchemaBytePayloadResponse'
+        '404':
+          description: Specified schema not found
       tags:
         - 'schemas'
     delete:
       summary: Delete specified version of schema
       operationId: deleteSchemaVersion
       responses:
-        '200':
-          description: OK
+        '204':
+          description: OK no content
       tags:
         - 'schemas'
 
@@ -264,6 +302,26 @@ components:
           type: string
     SchemaBytePayload:
       type: string
+    SchemaGroup:
+      type: object
+      properties:
+        name:
+          type: string
+        createdTimeUtc:
+          type: string
+          format: date-time
+        updatedTimeUtc:
+          type: string
+          format: date-time
+        serialization:
+          type: string
+        schemaCompatibility:
+          type: integer
+          description: schema compatibility mode enum, defined by support serialization format
+        groupProperties:
+          type: object
+          additionalProperties:
+            type: string
   responses:
     SchemaIdResponse:
       description: OK
