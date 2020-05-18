@@ -30,6 +30,7 @@
         ]
       }
     },
+<<<<<<< HEAD
     "/$schemagroups/getSchemaById/{schema-id}": {
       "get": {
         "summary": "Get schema by schema ID",
@@ -40,6 +41,18 @@
             "name": "schema-id",
             "in": "path",
             "description": "schema ID referencing specific schema in registry namespace",
+=======
+    "/$schemas/ids/{schema-guid}": {
+      "get": {
+        "summary": "Get schema by GUID",
+        "description": "Get schema by GUID.",
+        "operationId": "getSchemaById",
+        "parameters": [
+          {
+            "name": "schema-guid",
+            "in": "path",
+            "description": "schema guid referencing specific schema in registry namespace",
+>>>>>>> 0d55f7f61e258c8722a6dc1043e31156b279748e
             "required": true,
             "schema": {
               "type": "string",
@@ -79,6 +92,16 @@
         "responses": {
           "200": {
             "description": "OK",
+<<<<<<< HEAD
+=======
+            "headers": {
+              "X-Serialization": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+>>>>>>> 0d55f7f61e258c8722a6dc1043e31156b279748e
             "content": {
               "application/json": {
                 "schema": {
@@ -223,14 +246,34 @@
         }
       ],
       "post": {
+<<<<<<< HEAD
         "summary": "Get schema ID by schema content",
         "description": "Get ID for schema with matching byte content and serialization format.",
         "operationId": "getIdBySchemaContent",
+=======
+        "summary": "Get schema GUID by schema content",
+        "description": "Get GUID for schema with matching byte content and serialization format.",
+        "operationId": "getGuidBySchemaContent",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Serialization",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+>>>>>>> 0d55f7f61e258c8722a6dc1043e31156b279748e
         "requestBody": {
           "description": "schema content",
           "required": true,
           "content": {
+<<<<<<< HEAD
             "application/json;serialization=avro": {
+=======
+            "application/json": {
+>>>>>>> 0d55f7f61e258c8722a6dc1043e31156b279748e
               "schema": {
                 "$ref": "#/components/schemas/SchemaBytePayload"
               }
@@ -251,13 +294,32 @@
       },
       "put": {
         "summary": "Register schema",
+<<<<<<< HEAD
         "description": "Register schema. If schema of specified name does not exist in specified group, schema is created at version 1. If schema of specified name exists already in specified group, schema is created at latest version + 1. If schema with identical content already exists, existing schema's ID is returned. \n",
         "operationId": "createSchema",
+=======
+        "description": "Register schema. If schema of specified name does not exist in specified group, schema is created at version 1. If schema of specified name exists already in specified group, schema is created at latest version + 1. If schema with identical content already exists, existing schema's GUID is returned. \n",
+        "operationId": "createSchema",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Serialization",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+>>>>>>> 0d55f7f61e258c8722a6dc1043e31156b279748e
         "requestBody": {
           "description": "schema content",
           "required": true,
           "content": {
+<<<<<<< HEAD
             "application/json;serialization=avro": {
+=======
+            "application/json": {
+>>>>>>> 0d55f7f61e258c8722a6dc1043e31156b279748e
               "schema": {
                 "$ref": "#/components/schemas/SchemaBytePayload"
               }
