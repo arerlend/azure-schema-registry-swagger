@@ -19,15 +19,15 @@ paths:
                   type: string
       tags:
       -  'groups'
-  /$schemas/ids/{schema-guid}:
+  /$schemagroups/getSchemaById/{schema-id}:
     get:
-      summary: Get schema by GUID
-      description: Get schema by GUID.
+      summary: Get schema by schema ID
+      description: Get schema by schema ID.
       operationId: getSchemaById
       parameters:
-      - name: schema-guid
+      - name: schema-id
         in: path
-        description: schema guid referencing specific schema in registry namespace
+        description: schema ID referencing specific schema in registry namespace
         required: true
         schema:
           type: string
@@ -36,7 +36,7 @@ paths:
         '200':
           $ref: '#/components/responses/SchemaBytePayloadResponse'
         '404':
-          description: Schema with matching GUID not found
+          description: Schema with matching ID not found
       tags:
         - 'runtime'
   /$schemagroups/{group-name}:
@@ -54,10 +54,6 @@ paths:
       responses:
         '200': 
           description: OK
-          headers:
-            X-Serialization:
-              schema:
-                type: string
           content:
             application/json:
               schema:
@@ -117,7 +113,7 @@ paths:
         '200':
           description: OK
           content:
-            application/json:
+            application/json;serialization=avro:
               schema:
                 type: array
                 items: 
@@ -150,20 +146,14 @@ paths:
         schema:
           type: string
     post:
-      summary: Get schema GUID by schema content
-      description: Get GUID for schema with matching byte content and serialization format.
-      operationId: getGuidBySchemaContent
-      parameters:
-        - in: header
-          name: X-Serialization
-          schema:
-            type: string
-          required: true
+      summary: Get schema ID by schema content
+      description: Get ID for schema with matching byte content and serialization format.
+      operationId: getIdBySchemaContent
       requestBody:
         description: schema content
         required: true
         content:
-          application/json:
+          application/json;serialization=avro:
             schema:
               $ref: '#/components/schemas/SchemaBytePayload'
       responses:
@@ -179,19 +169,13 @@ paths:
         Register schema.
         If schema of specified name does not exist in specified group, schema is created at version 1.
         If schema of specified name exists already in specified group, schema is created at latest version + 1.
-        If schema with identical content already exists, existing schema's GUID is returned. 
+        If schema with identical content already exists, existing schema's ID is returned. 
       operationId: createSchema
-      parameters:
-        - in: header
-          name: X-Serialization
-          schema:
-            type: string
-          required: true
       requestBody:
         description: schema content
         required: true
         content:
-          application/json:
+          application/json;serialization=avro:
             schema:
               $ref: '#/components/schemas/SchemaBytePayload'
       responses:
@@ -241,13 +225,8 @@ paths:
       responses:
         '200':
           description: OK
-          headers: 
-            X-Serialization:
-              schema:
-                type: string
-              description: schema type
           content:
-            application/json:
+            application/json;serialization=avro:
               schema:
                 type: array
                 items: 
@@ -329,10 +308,6 @@ components:
         Location:
           schema:
             type: string
-        X-Serialization:
-          schema:
-            type: string
-          description: schema type
         X-Schema-Id:
           schema:
             type: string
@@ -348,7 +323,10 @@ components:
             type: integer
           description: version of returned schema
       content:
-        application/json:
+        application/json;serialization=avro:
+          schema:
+            $ref: '#/components/schemas/SchemaId'
+        application/json;serialization=protobuf:
           schema:
             $ref: '#/components/schemas/SchemaId'
     SchemaBytePayloadResponse:
@@ -357,10 +335,6 @@ components:
         Location:
           schema:
             type: string
-        X-Serialization:
-          schema:
-            type: string
-          description: schema type
         X-Schema-Id:
           schema:
             type: string
@@ -376,6 +350,6 @@ components:
             type: integer
           description: version of returned schema
       content:
-        application/json:
+        application/json;serialization=avro:
           schema:
             $ref: '#/components/schemas/SchemaBytePayload'
