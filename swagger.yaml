@@ -112,8 +112,12 @@ paths:
       responses:
         '200':
           description: OK
+          headers:
+            X-Schema-Type:
+              schema:
+                type: string
           content:
-            application/json;serialization=avro:
+            application/json:
               schema:
                 type: array
                 items: 
@@ -149,11 +153,17 @@ paths:
       summary: Get schema ID by schema content
       description: Get ID for schema with matching byte content and serialization format.
       operationId: getIdBySchemaContent
+      parameters:
+      - in: header
+        name: X-Schema-Type
+        schema:
+          type: string
+        required: true
       requestBody:
         description: schema content
         required: true
         content:
-          application/json;serialization=avro:
+          application/json:
             schema:
               $ref: '#/components/schemas/SchemaBytePayload'
       responses:
@@ -175,7 +185,7 @@ paths:
         description: schema content
         required: true
         content:
-          application/json;serialization=avro:
+          application/json:
             schema:
               $ref: '#/components/schemas/SchemaBytePayload'
       responses:
@@ -225,8 +235,12 @@ paths:
       responses:
         '200':
           description: OK
+          headers:
+            X-Schema-Type:
+              schema:
+                type: string
           content:
-            application/json;serialization=avro:
+            application/json:
               schema:
                 type: array
                 items: 
@@ -292,7 +306,7 @@ components:
         updatedTimeUtc:
           type: string
           format: date-time
-        serialization:
+        schemaType:
           type: string
         schemaCompatibility:
           type: integer
@@ -308,6 +322,9 @@ components:
         Location:
           schema:
             type: string
+        X-Schema-Type:
+          schema:
+            type: string
         X-Schema-Id:
           schema:
             type: string
@@ -323,10 +340,7 @@ components:
             type: integer
           description: version of returned schema
       content:
-        application/json;serialization=avro:
-          schema:
-            $ref: '#/components/schemas/SchemaId'
-        application/json;serialization=protobuf:
+        application/json:
           schema:
             $ref: '#/components/schemas/SchemaId'
     SchemaBytePayloadResponse:
@@ -335,6 +349,9 @@ components:
         Location:
           schema:
             type: string
+        X-Schema-Type:
+          schema:
+            type: string
         X-Schema-Id:
           schema:
             type: string
@@ -350,6 +367,6 @@ components:
             type: integer
           description: version of returned schema
       content:
-        application/json;serialization=avro:
+        application/json:
           schema:
             $ref: '#/components/schemas/SchemaBytePayload'
