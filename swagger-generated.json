@@ -97,7 +97,7 @@
       },
       "put": {
         "summary": "Create schema group",
-        "description": "Create schema group with specified serialization format in registry namespace.",
+        "description": "Create schema group with specified schema type in registry namespace.",
         "operationId": "createGroup",
         "requestBody": {
           "description": "schema group description",
@@ -168,8 +168,15 @@
         "responses": {
           "200": {
             "description": "OK",
+            "headers": {
+              "X-Schema-Type": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
             "content": {
-              "application/json;serialization=avro": {
+              "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -224,13 +231,23 @@
       ],
       "post": {
         "summary": "Get schema ID by schema content",
-        "description": "Get ID for schema with matching byte content and serialization format.",
+        "description": "Get ID for schema with matching byte content and schema type.",
         "operationId": "getIdBySchemaContent",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Schema-Type",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "description": "schema content",
           "required": true,
           "content": {
-            "application/json;serialization=avro": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SchemaBytePayload"
               }
@@ -253,11 +270,21 @@
         "summary": "Register schema",
         "description": "Register schema. If schema of specified name does not exist in specified group, schema is created at version 1. If schema of specified name exists already in specified group, schema is created at latest version + 1. If schema with identical content already exists, existing schema's ID is returned. \n",
         "operationId": "createSchema",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Schema-Type",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
         "requestBody": {
           "description": "schema content",
           "required": true,
           "content": {
-            "application/json;serialization=avro": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SchemaBytePayload"
               }
@@ -333,8 +360,15 @@
         "responses": {
           "200": {
             "description": "OK",
+            "headers": {
+              "X-Schema-Type": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
             "content": {
-              "application/json;serialization=avro": {
+              "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -436,12 +470,12 @@
             "type": "string",
             "format": "date-time"
           },
-          "serialization": {
+          "schemaType": {
             "type": "string"
           },
           "schemaCompatibility": {
             "type": "integer",
-            "description": "schema compatibility mode enum, defined by support serialization format"
+            "description": "schema compatibility mode enum, defined by supported schema type"
           },
           "groupProperties": {
             "type": "object",
@@ -461,44 +495,7 @@
               "type": "string"
             }
           },
-          "X-Schema-Id": {
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "description": "unique schema identifier"
-          },
-          "X-Schema-Id-Location": {
-            "schema": {
-              "type": "string",
-              "format": "url"
-            },
-            "description": "location of schema resource"
-          },
-          "X-Schema-Version": {
-            "schema": {
-              "type": "integer"
-            },
-            "description": "version of returned schema"
-          }
-        },
-        "content": {
-          "application/json;serialization=avro": {
-            "schema": {
-              "$ref": "#/components/schemas/SchemaId"
-            }
-          },
-          "application/json;serialization=protobuf": {
-            "schema": {
-              "$ref": "#/components/schemas/SchemaId"
-            }
-          }
-        }
-      },
-      "SchemaBytePayloadResponse": {
-        "description": "OK",
-        "headers": {
-          "Location": {
+          "X-Schema-Type": {
             "schema": {
               "type": "string"
             }
@@ -525,7 +522,49 @@
           }
         },
         "content": {
-          "application/json;serialization=avro": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SchemaId"
+            }
+          }
+        }
+      },
+      "SchemaBytePayloadResponse": {
+        "description": "OK",
+        "headers": {
+          "Location": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "X-Schema-Type": {
+            "schema": {
+              "type": "string"
+            }
+          },
+          "X-Schema-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "unique schema identifier"
+          },
+          "X-Schema-Id-Location": {
+            "schema": {
+              "type": "string",
+              "format": "url"
+            },
+            "description": "location of schema resource"
+          },
+          "X-Schema-Version": {
+            "schema": {
+              "type": "integer"
+            },
+            "description": "version of returned schema"
+          }
+        },
+        "content": {
+          "application/json": {
             "schema": {
               "$ref": "#/components/schemas/SchemaBytePayload"
             }
