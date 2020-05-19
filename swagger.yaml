@@ -181,6 +181,12 @@ paths:
         If schema of specified name exists already in specified group, schema is created at latest version + 1.
         If schema with identical content already exists, existing schema's ID is returned. 
       operationId: createSchema
+      parameters:
+      - in: header
+        name: X-Schema-Type
+        schema:
+          type: string
+        required: true
       requestBody:
         description: schema content
         required: true
